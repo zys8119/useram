@@ -17270,19 +17270,31 @@ var Useram = /** @class */ (function () {
         this.app = app;
         this.options = options;
         this.dafaultConfig = {
-            time: 1000
+            intervalTime: 100,
+            validTime: 5000,
+            isConsole: true,
         };
+        this.eventTypes = [
+            'wheel', 'mousewheel', 'DOMMouseScroll',
+            'mousedown', 'mousemove',
+            "keydown",
+            "touchstart", "touchmove",
+            "visibilitychange",
+            'resize'
+        ];
         this.config = lodashExports.merge(this.dafaultConfig, options);
         this.init();
     }
     Useram.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        document.addEventListener('mousemove', this.handleUserActivity.bind(null, true));
-                        document.addEventListener('keydown', this.handleUserActivity.bind(null, true));
-                        document.addEventListener('visibilitychange', this.handleUserActivity.bind(null, false));
+                        this.start = performance.now();
+                        this.eventTypes.forEach(function (type) {
+                            window.addEventListener(type, _this.handleUserActivity.bind(_this, !['visibilitychange'].includes(type)));
+                        });
                         return [4 /*yield*/, this.startInactivityTimer()];
                     case 1:
                         _a.sent();
@@ -17292,10 +17304,44 @@ var Useram = /** @class */ (function () {
         });
     };
     Useram.prototype.handleUserActivity = function (isVisible) {
+        if (isVisible || !isVisible && document.visibilityState === 'visible') {
+            // 页面在前台，用户活跃
+            this.start = performance.now();
+        }
+        else {
+            // 页面在后台，用户不活跃
+            this.start = performance.now();
+        }
     };
     Useram.prototype.startInactivityTimer = function () {
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+            var currTime;
+            var _this = this;
+            return __generator(this, function (_e) {
+                currTime = performance.now() - this.start;
+                if (currTime >= this.config.validTime) {
+                    if (this.config.isConsole) {
+                        console.log("不活跃");
+                    }
+                    (_b = (_a = this.config).onActive) === null || _b === void 0 ? void 0 : _b.call(_a);
+                }
+                else {
+                    if (this.config.isConsole) {
+                        console.log("活跃");
+                    }
+                    (_d = (_c = this.config).onUnActive) === null || _d === void 0 ? void 0 : _d.call(_c);
+                }
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this.startInactivityTimer()];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }, this.config.intervalTime);
                 return [2 /*return*/];
             });
         });
