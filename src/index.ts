@@ -1,6 +1,7 @@
 import {App} from "vue"
 import {Options} from "../type";
 import {merge} from "lodash";
+let isActive = false
 export class Useram {
     start:number
     dafaultConfig:Options = {
@@ -25,22 +26,17 @@ export class Useram {
     async init(){
         this.start = performance.now()
         this.eventTypes.forEach(type=>{
-            window.addEventListener(type, this.handleUserActivity.bind(this, !['visibilitychange'].includes(type)));
+            window.addEventListener(type, this.handleUserActivity.bind(this));
         })
         await this.startInactivityTimer()
     }
-    handleUserActivity(isVisible){
-        if(isVisible || !isVisible && document.visibilityState === 'visible'){
-            // 页面在前台，用户活跃
-            this.start = performance.now()
-        }else {
-            // 页面在后台，用户不活跃
-            this.start = performance.now()
-        }
+    handleUserActivity(){
+        this.start = performance.now()
     }
     async startInactivityTimer(){
         const currTime = performance.now() - this.start
-        if(currTime >= this.config.validTime){
+        isActive = currTime >= this.config.validTime
+        if(isActive){
             if(this.config.isConsole){
                 console.log("不活跃")
             }
@@ -55,7 +51,6 @@ export class Useram {
             await this.startInactivityTimer()
         }, this.config.intervalTime)
     }
-
 }
 const install = (app:App, config:Options)=>{
     new Useram(app, config)

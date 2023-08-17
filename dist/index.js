@@ -17264,6 +17264,7 @@ lodash.exports;
 
 var lodashExports = lodash.exports;
 
+var isActive = false;
 var Useram = /** @class */ (function () {
     function Useram(app, options) {
         if (options === void 0) { options = {}; }
@@ -17293,7 +17294,7 @@ var Useram = /** @class */ (function () {
                     case 0:
                         this.start = performance.now();
                         this.eventTypes.forEach(function (type) {
-                            window.addEventListener(type, _this.handleUserActivity.bind(_this, !['visibilitychange'].includes(type)));
+                            window.addEventListener(type, _this.handleUserActivity.bind(_this));
                         });
                         return [4 /*yield*/, this.startInactivityTimer()];
                     case 1:
@@ -17303,15 +17304,8 @@ var Useram = /** @class */ (function () {
             });
         });
     };
-    Useram.prototype.handleUserActivity = function (isVisible) {
-        if (isVisible || !isVisible && document.visibilityState === 'visible') {
-            // 页面在前台，用户活跃
-            this.start = performance.now();
-        }
-        else {
-            // 页面在后台，用户不活跃
-            this.start = performance.now();
-        }
+    Useram.prototype.handleUserActivity = function () {
+        this.start = performance.now();
     };
     Useram.prototype.startInactivityTimer = function () {
         var _a, _b, _c, _d;
@@ -17320,7 +17314,8 @@ var Useram = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_e) {
                 currTime = performance.now() - this.start;
-                if (currTime >= this.config.validTime) {
+                isActive = currTime >= this.config.validTime;
+                if (isActive) {
                     if (this.config.isConsole) {
                         console.log("不活跃");
                     }
