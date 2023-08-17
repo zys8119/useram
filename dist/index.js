@@ -17292,13 +17292,6 @@ var Useram = /** @class */ (function () {
         });
     };
     Useram.prototype.handleUserActivity = function (isVisible) {
-        if (isVisible || !isVisible && document.visibilityState === 'visible') ;
-        else {
-            setInterval(function () {
-                console.log(111);
-            });
-            // 页面在后台，用户不活跃
-        }
     };
     Useram.prototype.startInactivityTimer = function () {
         return __awaiter(this, void 0, void 0, function () {

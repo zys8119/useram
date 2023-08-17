@@ -21,9 +21,6 @@ export class Useram {
         if(isVisible || !isVisible && document.visibilityState === 'visible'){
             // 页面在前台，用户活跃
         }else {
-            setInterval(()=>{
-                console.log(111)
-            })
             // 页面在后台，用户不活跃
         }
     }
