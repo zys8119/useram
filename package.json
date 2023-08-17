@@ -1,0 +1,32 @@
+{
+  "name": "useram",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "rollupConfig": "tsc -p build/tsconfig.json -w",
+    "rollupBuild": "rollup -c build/rollup.config.js --bundleConfigAsCjs -w",
+    "build": "npm run rollupConfig & npm run rollupBuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zys8119/useram.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zys8119/useram/issues"
+  },
+  "homepage": "https://github.com/zys8119/useram#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "rollup": "^3.28.0",
+    "tslib": "^2.6.1",
+    "typescript": "^4.6.3",
+    "vue": "^3.3.4"
+  }
+}
