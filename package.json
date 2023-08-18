@@ -1,8 +1,9 @@
 {
   "name": "useram",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/index.js",
+  "typings": "type.d.ts",
   "scripts": {
     "rollupConfig": "tsc -p build/tsconfig.json -w",
     "rollupBuild": "rollup -c build/rollup.config.js --bundleConfigAsCjs -w",

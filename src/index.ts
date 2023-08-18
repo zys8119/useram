@@ -1,16 +1,16 @@
 import {App} from "vue"
-import {Options} from "../type";
+import {Options, ImplementsUseram, EventTypes} from "../type";
 import {merge} from "lodash";
-let isActive = false
-export class Useram {
+let isUnActive = false
+export class Useram implements ImplementsUseram{
     start:number
-    dafaultConfig:Options = {
+    readonly dafaultConfig:Options = {
         intervalTime:100,
         validTime:5000,
-        isConsole:true,
+        isConsole:false,
     }
     config:Required<Options>
-    eventTypes:Array<keyof DocumentEventMap | 'mousewheel' | 'DOMMouseScroll'> = [
+    private eventTypes:EventTypes = [
         'wheel', 'mousewheel', 'DOMMouseScroll',
         'mousedown', 'mousemove',
         "keydown",
@@ -18,8 +18,9 @@ export class Useram {
         "visibilitychange",
         'resize'
     ]
-    constructor(public app:App, private options:Options = {}) {
+    constructor(private options:Options = {}) {
         this.config = merge(this.dafaultConfig, options) as Required<Options>
+        this.eventTypes = this.options.eventTypes || this.eventTypes
         this.init()
     }
 
@@ -35,17 +36,17 @@ export class Useram {
     }
     async startInactivityTimer(){
         const currTime = performance.now() - this.start
-        isActive = currTime >= this.config.validTime
-        if(isActive){
+        isUnActive = currTime >= this.config.validTime
+        if(isUnActive){
             if(this.config.isConsole){
                 console.log("不活跃")
             }
-            this.config.onActive?.()
+            this.config.onUnActive?.()
         }else {
             if(this.config.isConsole) {
                 console.log("活跃")
             }
-            this.config.onUnActive?.()
+            this.config.onActive?.()
         }
         setTimeout(async ()=>{
             await this.startInactivityTimer()
@@ -53,7 +54,7 @@ export class Useram {
     }
 }
 const install = (app:App, config:Options)=>{
-    new Useram(app, config)
+    new Useram(config)
 }
 export default {
     install

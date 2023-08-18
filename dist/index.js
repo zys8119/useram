@@ -17264,16 +17264,15 @@ lodash.exports;
 
 var lodashExports = lodash.exports;
 
-var isActive = false;
+var isUnActive = false;
 var Useram = /** @class */ (function () {
-    function Useram(app, options) {
+    function Useram(options) {
         if (options === void 0) { options = {}; }
-        this.app = app;
         this.options = options;
         this.dafaultConfig = {
             intervalTime: 100,
             validTime: 5000,
-            isConsole: true,
+            isConsole: false,
         };
         this.eventTypes = [
             'wheel', 'mousewheel', 'DOMMouseScroll',
@@ -17284,6 +17283,7 @@ var Useram = /** @class */ (function () {
             'resize'
         ];
         this.config = lodashExports.merge(this.dafaultConfig, options);
+        this.eventTypes = this.options.eventTypes || this.eventTypes;
         this.init();
     }
     Useram.prototype.init = function () {
@@ -17314,18 +17314,18 @@ var Useram = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_e) {
                 currTime = performance.now() - this.start;
-                isActive = currTime >= this.config.validTime;
-                if (isActive) {
+                isUnActive = currTime >= this.config.validTime;
+                if (isUnActive) {
                     if (this.config.isConsole) {
                         console.log("不活跃");
                     }
-                    (_b = (_a = this.config).onActive) === null || _b === void 0 ? void 0 : _b.call(_a);
+                    (_b = (_a = this.config).onUnActive) === null || _b === void 0 ? void 0 : _b.call(_a);
                 }
                 else {
                     if (this.config.isConsole) {
                         console.log("活跃");
                     }
-                    (_d = (_c = this.config).onUnActive) === null || _d === void 0 ? void 0 : _d.call(_c);
+                    (_d = (_c = this.config).onActive) === null || _d === void 0 ? void 0 : _d.call(_c);
                 }
                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
@@ -17344,7 +17344,7 @@ var Useram = /** @class */ (function () {
     return Useram;
 }());
 var install = function (app, config) {
-    new Useram(app, config);
+    new Useram(config);
 };
 var index = {
     install: install

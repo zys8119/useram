@@ -23,9 +23,9 @@ app.use(useram, Options)
 
 ```typescript
 export type Options = {
-    // 定时监测间隔时间
+    // 定时监测间隔时间,毫秒
     intervalTime?:number
-    // 有效时间
+    // 有效时间,毫秒
     validTime?:number
     // 活跃回调
     onActive?:ActiveCallBack
